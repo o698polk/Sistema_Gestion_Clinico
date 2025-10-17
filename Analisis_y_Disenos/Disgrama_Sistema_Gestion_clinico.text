@@ -1,0 +1,121 @@
+classDiagram
+
+class Usuario {
+    - idUsuario : int
+    - nombre : string
+    - apellido : string
+    - correo : string
+    - contraseña : string
+    - rol : string
+    - estado : string
+    + iniciarSesion() : boolean
+    + cerrarSesion() : void
+    + actualizarPerfil() : void
+}
+class Paciente {
+    - cedula : string
+    - fechaNacimiento : Date
+    - direccion : string
+    - telefono : string
+    - historialClinico : List<HistorialClinico>
+    + registrarPaciente() : void
+    + reservarCita() : Cita
+    + pagarCita() : Pago
+    + consultarReceta() : Receta
+}
+
+class Medico {
+    - especialidad : string
+    - numeroLicencia : string
+    - horarioDisponible : string
+    - citasAsignadas : List<Cita>
+    + atenderPaciente(cita : Cita) : void
+    + emitirReceta(paciente : Paciente) : Receta
+    + generarReporteMedico() : Reporte
+}
+
+
+class Administrador {
+    + gestionarUsuarios() : void
+    + generarReportes() : Reporte
+    + gestionarPagos() : void
+}
+
+class Cita {
+    - idCita : int
+    - fecha : Date
+    - hora : Time
+    - estado : string
+    - paciente : Paciente
+    - medico : Medico
+    - pago : Pago
+    + reservar() : void
+    + cancelar() : void
+    + confirmar() : void
+}
+
+class Pago {
+    - idPago : int
+    - monto : float
+    - metodo : string
+    - fechaPago : Date
+    - estado : string
+    - cita : Cita
+    + registrarPago() : void
+    + generarComprobante() : void
+}
+
+
+class Receta {
+    - idReceta : int
+    - fechaEmision : Date
+    - medicamentos : List<Medicamento>
+    - observaciones : string
+    - medico : Medico
+    - paciente : Paciente
+    + generarPDF() : void
+    + consultarReceta() : void
+}
+
+
+class Medicamento {
+    - idMedicamento : int
+    - nombre : string
+    - dosis : string
+    - frecuencia : string
+    - duracion : string
+}
+
+class HistorialClinico {
+    - idHistorial : int
+    - fechaRegistro : Date
+    - diagnostico : string
+    - observaciones : string
+    - paciente : Paciente
+    - medico : Medico
+    - receta : Receta
+}
+
+
+class Reporte {
+    - idReporte : int
+    - tipoReporte : string
+    - fechaGeneracion : Date
+    - datos : string
+    + generarReporte() : void
+}
+
+
+Usuario <|-- Paciente
+Usuario <|-- Medico
+Usuario <|-- Administrador
+
+Paciente "1" -- "0..n" Cita
+Medico "1" -- "0..n" Cita
+Cita "1" -- "1" Pago
+Medico "1" -- "0..n" Receta
+Paciente "1" -- "0..n" Receta
+Receta "1" -- "1..n" Medicamento
+Paciente "1" -- "0..n" HistorialClinico
+Medico "1" -- "0..n" HistorialClinico
+Administrador "1" -- "0..n" Reporte
